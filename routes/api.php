@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\LeadershipController;
+use App\Http\Controllers\API\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,12 @@ Route::prefix('v1')->controller(LeadershipController::class)->group(function () 
     Route::get('/leadership/get/{id}', 'getDataById');
     Route::post('/leadership/update/{id}', 'updateDataById');
     Route::delete('/leadership/delete/{id}', 'deleteDataById');
+});
+
+Route::prefix('v2')->controller(UsersController::class)->group(function () {
+    Route::get('/users', 'getAllData');
+    Route::post('/users/create', 'createData');
+    Route::get('/users/get/{id}', 'getDataById');
+    Route::post('/users/update/{id}', 'updateDataById');
+    Route::delete('/users/delete/{id}', 'deleteDataById');
 });
