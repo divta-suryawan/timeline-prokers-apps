@@ -39,3 +39,15 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector('.loading-container').style.display = 'flex';
+        });
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                document.querySelector('.loading-container').style.display = 'none';
+            }, 300);
+        });
+    </script>
+
+

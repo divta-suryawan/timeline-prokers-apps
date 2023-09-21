@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\LeadershipController;
+use App\Http\Controllers\API\ProkersController;
 use App\Http\Controllers\API\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,13 @@ Route::prefix('v2')->controller(UsersController::class)->group(function () {
     Route::get('/users/get/{id}', 'getDataById');
     Route::post('/users/update/{id}', 'updateDataById');
     Route::delete('/users/delete/{id}', 'deleteDataById');
+});
+
+Route::prefix('v3')->controller(ProkersController::class)->group(function () {
+    Route::get('/prokers', 'getAllData');
+    Route::post('/prokers/create', 'createData');
+    Route::get('/prokers/get/{id}', 'getDataById');
+    Route::post('/prokers/update/{id}', 'updateDataById');
+    Route::delete('/prokers/delete/{id}', 'deleteDataById');
+    Route::get('/leadership/new', 'getLatestLeadership');
 });
