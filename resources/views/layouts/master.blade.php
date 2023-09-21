@@ -40,6 +40,9 @@
 
   <body>
 
+    <div class="loading-container">
+        <img src="{{ asset('assetAdmin/assets/img/loading/loading.gif') }}" alt="Loading..." />
+    </div>
 
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">

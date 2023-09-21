@@ -35,8 +35,8 @@ class UsersController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'position' => 'required',
-                'password' => 'required|confirmed|min:6',
-                'password_confirmation' => 'required'
+                'password' => 'required|min:6',
+                'password_confirmation' => 'required|same:password'
             ],
             [
                 'name.required' => 'Form name tidak boleh kosong',
@@ -44,9 +44,10 @@ class UsersController extends Controller
                 'position.required' => 'Form jabatan tidak boleh kosong',
                 'password.required' => 'Form password tidak boleh kosong',
                 'password_confirmation.required' => 'Form password confirmation tidak boleh kosong',
+                'password_confirmation.same' => 'Password tidak sama',
                 'email.email' => 'Mohon isi alamat email dengan format yang benar',
                 'email.unique' => 'Email sudah digunakan',
-                'password.confirmed' => 'Password tidak sama'
+                'password.min' => 'Password minimal 6 karakter',
             ]
         );
 
@@ -109,14 +110,16 @@ class UsersController extends Controller
                 'name' => 'required',
                 'email' => 'required|email',
                 'position' => 'required',
-                'password' => 'confirmed',
+                'password' => 'min:6',
+                'password_confirmation' => 'same:password'
             ],
             [
                 'name.required' => 'Form name tidak boleh kosong',
                 'email.required' => 'Form email tidak boleh kosong',
                 'position.required' => 'Form jabatan tidak boleh kosong',
                 'email.email' => 'Mohon isi alamat email dengan format yang benar',
-                'password.confirmed' => 'Password tidak sama'
+                'password.min' => 'Password minimal 6 karakter',
+                'password_confirmation.same' => 'Password tidak sama',
             ]
         );
 

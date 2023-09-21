@@ -57,10 +57,15 @@
                                 <small id="email-error" class="text-danger"></small>
                             </div>
                         </div>
-                        <div class="row">
+                       <div class="row">
                             <div class="col mb-3">
                                 <label for="password" class="form-label" id="passwordModalUsers">Password</label>
-                                <input type="password" id="password" name="password" class="form-control" placeholder="Input here..." autocomplete="off">
+                                <div class="input-group">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Input here..." autocomplete="off">
+                                    <span class="input-group-text" id="togglePassword">
+                                        <i class="far fa-eye"></i>
+                                    </span>
+                                </div>
                                 <small id="password-error" class="text-danger"></small>
                             </div>
                         </div>
@@ -85,7 +90,6 @@
 @section('scripts')
     <script>
         $(document).ready(function(){
-            getDataUsers();
             let dataTable = $("#dataTableUsers").DataTable({
                 "responsive": true,
                 "lengthChange": true,
@@ -124,11 +128,27 @@
                     }
                 });
             }
+            getDataUsers();
 
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+
+            // lihat password
+            $(document).ready(function() {
+                $("#togglePassword").click(function() {
+                    let passwordField = $("#password");
+                    let passwordFieldType = passwordField.attr("type");
+                    if (passwordFieldType === "password") {
+                        passwordField.attr("type", "text");
+                        $("#togglePassword i").removeClass("far fa-eye").addClass("far fa-eye-slash");
+                    } else {
+                        passwordField.attr("type", "password");
+                        $("#togglePassword i").removeClass("far fa-eye-slash").addClass("far fa-eye");
+                    }
+                });
             });
 
             // get Data by id
@@ -209,9 +229,14 @@
                             } else if (response.code === 200) {
                                 $('#usersModal').modal('hide');
                                 showSweetAlert('success', 'Success!', 'Data berhasil diperbaharui!');
-                                getDataUsers();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             }else {
                                 showSweetAlert('error', 'Error!', 'Gagal memperbaharui data!');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             }
                         },
                         error: function(xhr) {
@@ -232,9 +257,14 @@
                             } else if (response.code === 200) {
                                 $('#usersModal').modal('hide');
                                 showSweetAlert('success', 'Success!', 'Data berhasil ditambahkan!');
-                                getDataUsers();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             }else {
                                 showSweetAlert('error', 'Error!', 'Gagal menambahkan data!');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             }
                         },
                         error: function(xhr) {
@@ -260,10 +290,15 @@
                             url: `/api/v2/users/delete/${id}`,
                             success: function(response) {
                                 Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
-                                getDataUsers();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             },
                             error: function(error) {
                                 Swal.fire('Error', 'Gagal menghapus data', 'error');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             }
                         });
                     }

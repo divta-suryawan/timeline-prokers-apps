@@ -55,7 +55,6 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        getDataLeaderShip();
         let dataTable = $("#dataTableLeadership").DataTable({
             "responsive": true,
             "lengthChange": true,
@@ -92,6 +91,7 @@
                 }
             });
         }
+        getDataLeaderShip();
 
 
         $.ajaxSetup({
@@ -150,13 +150,13 @@
             let data = {
                 periode: periode,
             };
-
             if (id) {
                 $.ajax({
                     type: 'post',
                     url: `/api/v1/leadership/update/${id}`,
                     data: data,
                     success: function(response) {
+                        $('.loading-container').hide();
                         if (response.code === 422) {
                             let errors = response.errors;
                             $.each(errors, function(key, value) {
@@ -165,9 +165,16 @@
                         } else if (response.code === 200) {
                             $('#leadershipModal').modal('hide');
                             showSweetAlert('success', 'Success!', 'Data berhasil diperbaharui!');
-                            getDataLeaderShip();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+
                         }else {
                             showSweetAlert('error', 'Error!', 'Gagal memperbaharui data!');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+
                         }
                     },
                     error: function(xhr) {
@@ -188,9 +195,15 @@
                         } else if (response.code === 200) {
                             $('#leadershipModal').modal('hide');
                             showSweetAlert('success', 'Success!', 'Data berhasil ditambahkan!');
-                            getDataLeaderShip();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
                         }else {
+                            $('.loading-container').hide();
                             showSweetAlert('error', 'Error!', 'Gagal menambahkan data!');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
                         }
                     },
                     error: function(xhr) {
@@ -217,10 +230,15 @@
                         url: `/api/v1/leadership/delete/${id}`,
                         success: function(response) {
                             Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
-                            getDataLeaderShip();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
                         },
                         error: function(error) {
                             Swal.fire('Error', 'Gagal menghapus data', 'error');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
                         }
                     });
                 }
