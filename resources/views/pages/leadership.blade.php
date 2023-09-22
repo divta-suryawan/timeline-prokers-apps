@@ -74,10 +74,10 @@
                         tableBody += "<td>" + (index + 1) + "</td>";
                         tableBody += "<td>" + item.periode + "</td>";
                         tableBody += "<td >" +
-                            "<button type='button' class='btn btn-outline-primary edit-modal' data-toggle='modal' " +
+                            "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
                             "data-id='" + item.id + "'>" +
                             "<i class='bx bx-edit-alt'></i></button>" +
-                            "<button type='button' class='btn btn-outline-danger delete-confirm' data-id='" +
+                            "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
                             item.id + "'><i class='bx bx-trash' ></i></button>" +
                             "</td>";
                         tableBody += "</tr>";
@@ -156,7 +156,6 @@
                     url: `/api/v1/leadership/update/${id}`,
                     data: data,
                     success: function(response) {
-                        $('.loading-container').hide();
                         if (response.code === 422) {
                             let errors = response.errors;
                             $.each(errors, function(key, value) {

@@ -29,6 +29,10 @@
             { id: 'usersSidebar', url: '/users' },
             { id: 'leadershipSidebar', url: '/leadership' },
             { id: 'prokersSidebar', url: '/prokers' },
+            { id: 'pendingStatus', url: '/prokers/pending' },
+            { id: 'onProgressStatus', url: '/prokers/onprogress' },
+            { id: 'finishStatus', url: '/prokers/finish' },
+            { id: 'notFinishStatus', url: '/prokers/notfinish' },
         ];
         menuItems.forEach(item => {
             if (item.url === currentUrl) {
@@ -49,5 +53,44 @@
             }, 300);
         });
     </script>
+
+    <script>
+         $(document).ready(function () {
+            function sidebarStatus() {
+                $.ajax({
+                    url: `/api/v3/prokers/detail/pending`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        var statusCounts = response.statusCounts;
+                        if (statusCounts.pending > 0) {
+                            $("#pendingStatus").show();
+                        } else {
+                            $("#pendingStatus").hide();
+                        }
+                        if (statusCounts.on_progress > 0) {
+                            $("#onProgressStatus").show();
+                        } else {
+                            $("#onProgressStatus").hide();
+                        }
+                        if (statusCounts.finish > 0) {
+                            $("#finishStatus").show();
+                        } else {
+                            $("#finishStatus").hide();
+                        }
+                        if (statusCounts.not_finish > 0) {
+                            $("#notFinishStatus").show();
+                        } else {
+                            $("#notFinishStatus").hide();
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Gagal mendapatkan data statusCounts', error);
+                    }
+                });
+            }
+            sidebarStatus();
+        });
+        </script>
 
 

@@ -25,3 +25,15 @@ Route::get('/leadership', function () {
 Route::get('/prokers', function () {
     return view('pages.prokers');
 });
+Route::get('/prokers/pending', function () {
+    return view('pages.details.pending');
+});
+Route::get('/prokers/onprogress', function () {
+    return view('pages.details.on-progress');
+});
+Route::get('/prokers/finish', function () {
+    return view('pages.details.finish');
+});
+Route::get('/prokers/notfinish', function () {
+    return view('pages.details.not-finish');
+});

@@ -137,10 +137,10 @@
                             tableBody += "<td>" + keterangan + "</td>";
                             tableBody += "<td>" + item.users.name + "</td>";
                             tableBody += "<td >" +
-                                "<button type='button' class='btn btn-outline-primary edit-modal' data-toggle='modal' " +
+                                "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
                                 "data-id='" + item.id + "'>" +
                                 "<i class='bx bx-edit-alt'></i></button>" +
-                                "<button type='button' class='btn btn-outline-danger delete-confirm' data-id='" +
+                                "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
                                 item.id + "'><i class='bx bx-trash' ></i></button>" +
                                 "</td>";
                             tableBody += "</tr>";

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\LeadershipController;
 use App\Http\Controllers\API\ProkersController;
+use App\Http\Controllers\API\StatusController;
 use App\Http\Controllers\API\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,8 @@ Route::prefix('v3')->controller(ProkersController::class)->group(function () {
     Route::get('/prokers/get/{id}', 'getDataById');
     Route::post('/prokers/update/{id}', 'updateDataById');
     Route::delete('/prokers/delete/{id}', 'deleteDataById');
-    Route::get('/leadership/new', 'getLatestLeadership');
+    Route::post('/prokers/start/{id}', 'startProker');
+    Route::post('/prokers/finish/{id}', 'finishProker');
+    Route::post('/prokers/notfinish/{id}', 'markProkerNotFinished');
+    Route::get('/prokers/detail/{status}', 'detail');
 });
