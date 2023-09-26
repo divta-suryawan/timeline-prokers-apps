@@ -45,7 +45,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveLeadership">Save</button>
+                    <button type="button" class="btn btn-primary" id="saveLeadership">
+                        <span id="btnText">Save</span>
+                        <span id="btnSpinner" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -74,7 +80,10 @@
                         tableBody += "<td>" + (index + 1) + "</td>";
                         tableBody += "<td>" + item.periode + "</td>";
                         tableBody += "<td >" +
-                            "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
+                           "<a href='/prokers/byleadership/" + item.id + "' data-id='" +
+                            item.id + "' class='btn btn-outline-warning btn-sm btn-get-byleadership'>" +
+                            "<i class='fa-regular fa-eye'></i></a>" +
+                            "<button type='button' class='btn btn-outline-primary btn-sm edit-modal'" +
                             "data-id='" + item.id + "'>" +
                             "<i class='bx bx-edit-alt'></i></button>" +
                             "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
@@ -99,7 +108,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         // get Data by id
         $(document).on('click', '.edit-modal', function() {
             let id = $(this).data('id');
@@ -150,6 +158,8 @@
             let data = {
                 periode: periode,
             };
+            $('#btnText').hide();
+            $('#btnSpinner').show();
             if (id) {
                 $.ajax({
                     type: 'post',
@@ -175,6 +185,10 @@
                             }, 1500);
 
                         }
+                        setTimeout(function() {
+                                $('#btnText').show();
+                                $('#btnSpinner').hide();
+                        }, 1500);
                     },
                     error: function(xhr) {
                         console.error('Gagal mengirim permintaan', xhr);
@@ -204,6 +218,10 @@
                                 location.reload();
                             }, 1500);
                         }
+                        setTimeout(function() {
+                                $('#btnText').show();
+                                $('#btnSpinner').hide();
+                        }, 1500);
                     },
                     error: function(xhr) {
                         console.error('Gagal mengirim permintaan', xhr);
@@ -213,36 +231,37 @@
         });
 
         // delete data
-        $(document).on('click', '.delete-confirm', function() {
-            let id = $(this).data('id');
-            Swal.fire({
-                title: 'Konfirmasi',
-                text: 'Apakah Anda yakin ingin menghapus data ini?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: `/api/v1/leadership/delete/${id}`,
-                        success: function(response) {
+         $(document).on('click', '.delete-confirm', function() {
+                let id = $(this).data('id');
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    html: 'Apakah Anda yakin ingin menghapus data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.ajax({
+                            type: 'DELETE',
+                            url: `/api/v1/leadership/delete/${id}`,
+                        });
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (result.value && result.value.code === 200) {
                             Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
                             setTimeout(function() {
                                 location.reload();
                             }, 1500);
-                        },
-                        error: function(error) {
+                        } else {
+                            console.log(result);
                             Swal.fire('Error', 'Gagal menghapus data', 'error');
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1500);
                         }
-                    });
-                }
-            });
+                    }
+                });
         });
+
     })
 </script>
 @endsection

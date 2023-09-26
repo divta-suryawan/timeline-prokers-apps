@@ -264,4 +264,24 @@ class ProkersController extends Controller
             'message' => 'Success get by status'
         ]);
     }
+
+    public function getDataByLeadership($id)
+    {
+        $data = ProkersModel::where('id_leadership', $id)
+            ->with('leadership', 'users')
+            ->get();
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Data not found'
+            ]);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Successfully',
+            'data' => $data
+        ]);
+    }
 }

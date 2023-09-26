@@ -83,7 +83,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveProkers">Save</button>
+                    <button type="button" class="btn btn-primary" id="saveProkers">
+                        <span id="btnText">Save</span>
+                        <span id="btnSpinner" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -260,6 +266,8 @@
                     id_leadership : id_leadership,
                     id_user : id_user,
                 };
+                $('#btnText').hide();
+                $('#btnSpinner').show();
 
                 if (id) {
                     $.ajax({
@@ -284,6 +292,10 @@
                                     location.reload();
                                 }, 1500);
                             }
+                            setTimeout(function() {
+                                $('#btnText').show();
+                                $('#btnSpinner').hide();
+                            }, 1500);
                         },
                         error: function(xhr) {
                             console.error('Gagal mengirim permintaan', xhr);
@@ -313,6 +325,10 @@
                                     location.reload();
                                 }, 1500);
                             }
+                            setTimeout(function() {
+                                $('#btnText').show();
+                                $('#btnSpinner').hide();
+                            }, 1500);
                         },
                         error: function(xhr) {
                             console.error('Gagal mengirim permintaan', xhr);
@@ -325,29 +341,29 @@
                 let id = $(this).data('id');
                 Swal.fire({
                     title: 'Konfirmasi',
-                    text: 'Apakah Anda yakin ingin menghapus data ini?',
+                    html: 'Apakah Anda yakin ingin menghapus data ini?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, Hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
+                    cancelButtonText: 'Batal',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.ajax({
                             type: 'DELETE',
                             url: `/api/v3/prokers/delete/${id}`,
-                            success: function(response) {
-                                Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 1500);
-                            },
-                            error: function(error) {
-                                Swal.fire('Error', 'Gagal menghapus data', 'error');
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 1500);
-                            }
                         });
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (result.value && result.value.code === 200) {
+                            Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            console.log(result);
+                            Swal.fire('Error', 'Gagal menghapus data', 'error');
+                        }
                     }
                 });
             });
