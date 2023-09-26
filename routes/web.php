@@ -37,3 +37,6 @@ Route::get('/prokers/finish', function () {
 Route::get('/prokers/notfinish', function () {
     return view('pages.details.not-finish');
 });
+Route::get('/prokers/byleadership/{id}', function ($id) {
+    return view('pages.prokersByPeriode');
+});

@@ -48,7 +48,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-ket">Save</button>
+                    <button type="button" class="btn btn-primary" id="save-ket">
+                        <span id="btnText">Save</span>
+                        <span id="btnSpinner" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -169,6 +175,8 @@
                     id: id,
                     ket: ket
                 };
+                $('#btnText').hide();
+                $('#btnSpinner').show();
 
                 $.ajax({
                     type: 'POST',
@@ -183,8 +191,13 @@
                             showSweetAlert('warning', 'Attention!', 'Proker tidak terlaksana  ');
                         }
                         setTimeout(function() {
+                                $('#btnText').show();
+                                $('#btnSpinner').hide();
+                        }, 1500);
+                        setTimeout(function() {
                             location.reload();
                         }, 1500);
+
                     },
                     error: function(error) {
                         showSweetAlert('error', 'Error!', 'Mohon Maaf silahkan periksa kembali inputan anda!');

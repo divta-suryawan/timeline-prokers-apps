@@ -18,8 +18,8 @@ return new class extends Migration
             $table->date('end');
             $table->enum('status', ['pending', 'on-progress', 'finish', 'not-finish'])->default('pending');
             $table->text('ket')->nullable();
-            $table->foreignId('id_user')->constrained('users');
-            $table->foreignId('id_leadership')->constrained('leadership');
+            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
+            $table->foreignId('id_leadership')->constrained('leadership')->onDelete('cascade');
             $table->timestamps();
         });
     }

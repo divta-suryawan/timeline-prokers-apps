@@ -1,35 +1,38 @@
 @extends('layouts.master')
 @section('content')
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h5>DATA USERS</h5>
-            <button type="button" class="btn btn-outline-primary" id="add-users" data-bs-toggle="modal" data-bs-target="#usersModal">
-                <i class='bx bxs-plus-circle'></i>
-            </button>
+       <div class="card-header d-flex justify-content-between">
+            <h5>DATA PROGRAM KERJA</h5>
+            <a  href="/prokers" class="btn btn-outline-primary">
+                <i class='bx bx-arrow-back'></i>
+            </a>
         </div>
             <div class="table-responsive text-nowrap px-4 py-1">
-                <table class="table" id="dataTableUsers">
+                <table class="table" id="dataTableProkers">
                     <thead>
                       <tr>
                         <th>No</th>
-                        <th>Nama</th>
-                        <th>Jabatan</th>
-                        <th>Email</th>
+                        <th>Proker</th>
+                        <th>Priode</th>
+                        <th>Start</th>
+                        <th>Finish</th>
+                        <th>Status</th>
+                        <th>Keterangan</th>
+                        <th>Users</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-
                     </tbody>
                 </table>
             </div>
     </div>
-    {{-- modal upsert data --}}
-    <div class="modal fade" id="usersModal" tabindex="-1" style="display: none;" aria-hidden="true">
+    {{-- upsert data --}}
+     <div class="modal fade" id="prokersModal" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="usersModalLabel">Tambah Data</h5>
+                    <h5 class="modal-title" id="prokersModalLabel">Tambah Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -45,68 +48,70 @@
                         </div>
                         <div class="row">
                             <div class="col mb-3">
-                                <label for="position" class="form-label">Jabatan</label>
-                                <input type="text" id="position" name="position" class="form-control" placeholder="Input here..." autocomplete="off">
-                                <small id="position-error" class="text-danger"></small>
+                                <label for="start" class="form-label">Start</label>
+                                <input type="date" id="start" name="start" class="form-control" placeholder="Input here..." autocomplete="off">
+                                <small id="start-error" class="text-danger"></small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Input here..." autocomplete="off">
-                                <small id="email-error" class="text-danger"></small>
-                            </div>
-                        </div>
-                       <div class="row">
-                            <div class="col mb-3">
-                                <label for="password" class="form-label" id="passwordModalUsers">Password</label>
-                                <div class="input-group">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Input here..." autocomplete="off">
-                                    <span class="input-group-text" id="togglePassword">
-                                        <i class="far fa-eye"></i>
-                                    </span>
-                                </div>
-                                <small id="password-error" class="text-danger"></small>
+                                <label for="end" class="form-label">End</label>
+                                <input type="date" id="end" name="end" class="form-control" placeholder="Input here..." autocomplete="off">
+                                <small id="end-error" class="text-danger"></small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col mb-3">
-                                <label for="password_confirmation" >Confirm Password</label>
-                                <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" >
-                                <small id="password_confirmation-error" class="text-danger"></small>
+                                <label for="id_leadership" class="form-label">Periode</label>
+                                 <select name="id_leadership" id="id_leadership" class="form-control">
+                                    <option value="">-- Pilih --</option>
+                                </select>
+                                <small id="id_leadership-error" class="text-danger"></small>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="id_user" class="form-label">Users</label>
+                                <select name="id_user" id="id_user" class="form-control">
+                                    <option value="">-- Pilih --</option>
+                                </select>
+                                <small id="id_users-error" class="text-danger"></small>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveUsers">
+                    <button type="button" class="btn btn-primary" id="saveProkers">
                         <span id="btnText">Save</span>
                         <span id="btnSpinner" style="display: none;">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Saving...
                         </span>
                     </button>
-
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
 @section('scripts')
-    <script>
-        $(document).ready(function(){
-            let dataTable = $("#dataTableUsers").DataTable({
+<script>
+    $(document).ready(function(){
+
+            let dataTable = $("#dataTableProkers").DataTable({
                 "responsive": true,
                 "lengthChange": true,
                 "lengthMenu": [10, 20, 30, 40, 50],
                 "autoWidth": false,
             });
 
-            function getDataUsers() {
+            function getDataProkers() {
+                const url = window.location.href;
+                const urlParts = url.split('/');
+                const parameter = urlParts[urlParts.length - 1];
                 $.ajax({
-                    url: `/api/v2/users`,
+                    url: `/api/v3/prokers/byleadership/${parameter}`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -115,8 +120,31 @@
                             tableBody += "<tr>";
                             tableBody += "<td>" + (index + 1) + "</td>";
                             tableBody += "<td>" + item.name + "</td>";
-                            tableBody += "<td>" + item.position + "</td>";
-                            tableBody += "<td>" + item.email + "</td>";
+                            tableBody += "<td>" + item.leadership.periode + "</td>";
+                            tableBody += "<td>" + moment(item.start).format('DD MMMM YYYY') + "</td>";
+                            tableBody += "<td>" + moment(item.end).format('DD MMMM YYYY') + "</td>";
+                            let statusClass = "";
+                            let statusText = item.status;
+                            let keterangan = item.ket;
+
+                            if (item.status === "pending") {
+                                keterangan = "Proker belum berjalan";
+                                statusClass = "btn btn-dark btn-sm";
+                            } else if (item.status === "on-progress") {
+                                keterangan = "Proker sedang berjalan";
+                                statusClass = "btn btn-warning btn-sm";
+                            } else if (item.status === "finish") {
+                                statusClass = "btn btn-success btn-sm";
+                            } else if (item.status === "not-finish") {
+                                statusClass = "btn btn-danger btn-sm";
+                            }
+                            if (!keterangan) {
+                                keterangan = "Proker belum selesai";
+                            }
+
+                            tableBody += "<td><span class='" + statusClass + "'>" + statusText + "</span></td>";
+                            tableBody += "<td>" + keterangan + "</td>";
+                            tableBody += "<td>" + item.users.name + "</td>";
                             tableBody += "<td >" +
                                 "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
                                 "data-id='" + item.id + "'>" +
@@ -125,17 +153,22 @@
                                 item.id + "'><i class='bx bx-trash' ></i></button>" +
                                 "</td>";
                             tableBody += "</tr>";
+                            $("h5").text("DATA PROGRAM KERJA PERIODE" + ' ' + item.leadership.periode);
                         });
-                        let table = $("#dataTableUsers").DataTable();
+
+                        let table = $("#dataTableProkers").DataTable();
                         table.clear().draw();
                         table.rows.add($(tableBody)).draw();
+
                     },
                     error: function () {
                         console.log("Failed to get data from server");
                     }
                 });
             }
-            getDataUsers();
+
+            getDataProkers();
+
 
             $.ajaxSetup({
                 headers: {
@@ -143,37 +176,61 @@
                 }
             });
 
-            // lihat password
-            $(document).ready(function() {
-                $("#togglePassword").click(function() {
-                    let passwordField = $("#password");
-                    let passwordFieldType = passwordField.attr("type");
-                    if (passwordFieldType === "password") {
-                        passwordField.attr("type", "text");
-                        $("#togglePassword i").removeClass("far fa-eye").addClass("far fa-eye-slash");
-                    } else {
-                        passwordField.attr("type", "password");
-                        $("#togglePassword i").removeClass("far fa-eye-slash").addClass("far fa-eye");
+            function getleaderhipNew() {
+                $.ajax({
+                    url: '/api/v1/leadership',
+                    method: 'GET',
+                    dataType: 'json',
+                     success: function (response){
+                        $.each(response.data, function (index, item) {
+                            $('#id_leadership').append('<option value="' + item.id + '">' + item.periode + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.log('Failed to get user data from server');
                     }
                 });
+            }
+            // get user
+            function getDataUser() {
+                $.ajax({
+                    url: '/api/v2/users',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        $.each(response.data, function (index, user) {
+                            $('#id_user').append('<option value="' + user.id + '">' + user.name + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.log('Failed to get user data from server');
+                    }
+                });
+            }
+
+
+
+            $('#prokersModal').on('shown.bs.modal', function () {
+                getleaderhipNew();
+                getDataUser();
+                $('.text-danger').text('');
             });
 
-            // get Data by id
+            // edit
             $(document).on('click', '.edit-modal', function() {
                 let id = $(this).data('id');
-                $('#leadershipModalLabel').text('Edit Data');
-                $('#passwordModalUsers').text('New Password');
+                $('#prokersModalLabel').text('Edit Data');
                 $.ajax({
                     type: 'GET',
-                    url: `/api/v2/users/get/${id}`,
+                    url: `/api/v3/prokers/get/${id}`,
                     success: function(response) {
                         $('#id').val(response.data.id);
                         $('#name').val(response.data.name);
-                        $('#position').val(response.data.position);
-                        $('#email').val(response.data.email);
-                        $('#password').val(response.data.password);
-                        $('#password_confirmation').val(response.data.password_confirmation);
-                        $('#usersModal').modal('show');
+                        $('#start').val(response.data.start);
+                        $('#end').val(response.data.end);
+                        $('#id_user').val(response.data.id_user);
+
+                        $('#prokersModal').modal('show');
                     },
                     error: function(error) {
                         console.error('Gagal mengambil data', error);
@@ -181,17 +238,13 @@
                 });
             });
             // reset modal
-            $(document).on('click', '#add-users', function() {
-                $('#usersModalLabel').text('Tambah Data');
+            $(document).on('click', '#add-prokers', function() {
+                $('#prokerspModalLabel').text('Tambah Data');
                 $('#upsertData')[0].reset();
                 $('#id').val('');
-                $('#usersModal').modal('show');
+                $('#prokerspModal').modal('show');
             });
 
-            // clear alert validasi
-            $('#usersModal').on('hidden.bs.modal', function() {
-                $('.text-danger').text('');
-            });
 
             // alert
             function showSweetAlert(icon, title, message) {
@@ -202,24 +255,24 @@
                 });
             }
 
-            $(document).on('click', '#saveUsers', function(e) {
+            $(document).on('click', '#saveProkers', function(e) {
 
                 $('.text-danger').text('');
 
                 e.preventDefault();
-                let id =    $('#id').val();
-                let name =        $('#name').val();
-                let position =        $('#position').val();
-                let email =        $('#email').val();
-                let password     =   $('#password').val();
-                let password_confirmation    =   $('#password_confirmation').val();
+                let id = $('#id').val();
+                let name= $('#name').val();
+                let start= $('#start').val();
+                let end= $('#end').val();
+                let id_leadership= $('#id_leadership').val();
+                let id_user= $('#id_user').val();
 
                 let data = {
-                    name : name,
-                    position : position,
-                    email : email,
-                    password : password,
-                    password_confirmation : password_confirmation
+                    name  : name,
+                    start : start,
+                    end : end,
+                    id_leadership : id_leadership,
+                    id_user : id_user,
                 };
                 $('#btnText').hide();
                 $('#btnSpinner').show();
@@ -227,7 +280,7 @@
                 if (id) {
                     $.ajax({
                         type: 'post',
-                        url: `/api/v2/users/update/${id}`,
+                        url: `/api/v3/prokers/update/${id}`,
                         data: data,
                         success: function(response) {
                             if (response.code === 422) {
@@ -236,7 +289,7 @@
                                     $('#' + key + '-error').text(value[0]);
                                 });
                             } else if (response.code === 200) {
-                                $('#usersModal').modal('hide');
+                                $('#prokersModal').modal('hide');
                                 showSweetAlert('success', 'Success!', 'Data berhasil diperbaharui!');
                                 setTimeout(function() {
                                     location.reload();
@@ -254,25 +307,22 @@
                         },
                         error: function(xhr) {
                             console.error('Gagal mengirim permintaan', xhr);
-                            setTimeout(function() {
-                                $('#btnText').show();
-                                $('#btnSpinner').hide();
-                            }, 1500);
                         }
                     });
                 } else {
                     $.ajax({
-                        type: 'POST',
-                        url: '/api/v2/users/create',
+                        type: 'post',
+                        url: '/api/v3/prokers/create',
                         data: data,
                         success: function(response) {
+
                             if (response.code === 422) {
                                 let errors = response.errors;
                                 $.each(errors, function(key, value) {
                                     $('#' + key + '-error').text(value[0]);
                                 });
                             } else if (response.code === 200) {
-                                $('#usersModal').modal('hide');
+                                $('#prokersModal').modal('hide');
                                 showSweetAlert('success', 'Success!', 'Data berhasil ditambahkan!');
                                 setTimeout(function() {
                                     location.reload();
@@ -290,10 +340,6 @@
                         },
                         error: function(xhr) {
                             console.error('Gagal mengirim permintaan', xhr);
-                            setTimeout(function() {
-                                $('#btnText').show();
-                                $('#btnSpinner').hide();
-                            }, 1500);
                         }
                     });
                 }
@@ -312,7 +358,7 @@
                     preConfirm: () => {
                         return $.ajax({
                             type: 'DELETE',
-                            url: `/api/v2/users/delete/${id}`,
+                            url: `/api/v3/prokers/delete/${id}`,
                         });
                     },
                 }).then((result) => {
@@ -329,7 +375,6 @@
                     }
                 });
             });
-
-        })
-    </script>
+    })
+</script>
 @endsection

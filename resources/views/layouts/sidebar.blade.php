@@ -99,25 +99,25 @@
             <li class="menu-item" id="pendingStatus" class="pendingStatus">
               <a href="/prokers/pending" class="menu-link " >
                 <i class="menu-icon tf-icons bx bx-play"></i>
-                <div data-i18n="Account Settings">Proker Belum Berjalan</div>
+                <div data-i18n="Account Settings">Belum Berjalan</div>
               </a>
             </li>
             <li class="menu-item" id="onProgressStatus" class="onProgressStatus">
               <a href="/prokers/onprogress" class="menu-link " >
                 <i class="menu-icon tf-icons bx bx-pause"></i>
-                <div data-i18n="Account Settings">Proker Sedang Berjalan</div>
+                <div data-i18n="Account Settings">Sedang Berjalan</div>
               </a>
             </li>
             <li class="menu-item" id="finishStatus" class="finishStatus">
               <a href="/prokers/finish" class="menu-link " >
                 <i class="menu-icon tf-icons bx bxs-like"></i>
-                <div data-i18n="Account Settings">Proker Terlaksana</div>
+                <div data-i18n="Account Settings">Terlaksana</div>
               </a>
             </li>
             <li class="menu-item" id="notFinishStatus" class="notFinishStatus">
               <a href="/prokers/notfinish" class="menu-link " >
                 <i class="menu-icon tf-icons bx bxs-dislike"></i>
-                <div data-i18n="Account Settings">Proker Tidak terlaksana</div>
+                <div data-i18n="Account Settings">Tidak terlaksana</div>
               </a>
             </li>
 

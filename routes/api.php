@@ -48,4 +48,5 @@ Route::prefix('v3')->controller(ProkersController::class)->group(function () {
     Route::post('/prokers/finish/{id}', 'finishProker');
     Route::post('/prokers/notfinish/{id}', 'markProkerNotFinished');
     Route::get('/prokers/detail/{status}', 'detail');
+    Route::get('/prokers/byleadership/{id}', 'getDataByLeadership');
 });
