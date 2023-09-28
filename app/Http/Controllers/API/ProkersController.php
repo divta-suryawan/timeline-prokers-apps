@@ -7,25 +7,46 @@ use App\Models\LeadershipModel;
 use App\Models\ProkersModel;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class ProkersController extends Controller
 {
     public function getAllData()
     {
-        $data = ProkersModel::with('leadership', 'users')->get();
+        $user = Auth::user();
+        if ($user->role == 'user') {
+            $data = ProkersModel::with('leadership', 'users')
+                ->where('id_user', $user->id)
+                ->get();
 
-        if ($data->isEmpty()) {
-            return response()->json([
-                'code' => 404,
-                'message' => 'Data not found ',
-            ]);
-        } else {
-            return response()->json([
-                'code' => 200,
-                'message' => 'success get all data',
-                'data' => $data
-            ]);
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'Data not found ',
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'success get all data',
+                    'data' => $data
+                ]);
+            }
+        } elseif ($user->role == 'admin') {
+            $data = ProkersModel::with('leadership', 'users')->get();
+
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'Data not found ',
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'success get all data',
+                    'data' => $data
+                ]);
+            }
         }
     }
 
@@ -58,11 +79,12 @@ class ProkersController extends Controller
         }
 
         try {
+            $user = Auth()->user();
             $data = new ProkersModel();
+            $data->id_user = $user->id;
             $data->name = $request->input('name');
             $data->start = $request->input('start');
             $data->end = $request->input('end');
-            $data->id_user = $request->input('id_user');
             $data->id_leadership = $request->input('id_leadership');
             $data->save();
         } catch (\Throwable $th) {
@@ -129,7 +151,6 @@ class ProkersController extends Controller
             $data->name = $request->input('name');
             $data->start = $request->input('start');
             $data->end = $request->input('end');
-            $data->id_user = $request->input('id_user');
             $data->id_leadership = $request->input('id_leadership');
             $data->update();
         } catch (\Throwable $th) {
@@ -246,42 +267,100 @@ class ProkersController extends Controller
 
     public function detail($status)
     {
-        $data = ProkersModel::with(['leadership', 'users'])
-            ->where('status', $status)
-            ->get();
+        $user = Auth::user();
+        if ($user->role === 'user') {
+            $data = ProkersModel::with('leadership', 'users')
+                ->where('id_user', $user->id)
+                ->where('status', $status)
+                ->get();
 
-        $statusCounts = [
-            'pending' => ProkersModel::where('status', 'pending')->count(),
-            'on_progress' => ProkersModel::where('status', 'on-progress')->count(),
-            'finish' => ProkersModel::where('status', 'finish')->count(),
-            'not_finish' => ProkersModel::where('status', 'not-finish')->count(),
-        ];
-        return response()->json([
-            'status' => $status,
-            'data' => $data,
-            'statusCounts' => $statusCounts,
-            'code' => 200,
-            'message' => 'Success get by status'
-        ]);
+            $statusCounts = [
+                'pending' => ProkersModel::where('status', 'pending')->count(),
+                'on_progress' => ProkersModel::where('status', 'on-progress')->count(),
+                'finish' => ProkersModel::where('status', 'finish')->count(),
+                'not_finish' => ProkersModel::where('status', 'not-finish')->count(),
+            ];
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'userRole' => $user->role,
+                    'status' => $status,
+                    'data' => $data,
+                    'statusCounts' => $statusCounts,
+                    'code' => 200,
+                    'message' => 'User does not have data for this status'
+                ]);
+            }
+
+            return response()->json([
+                'userRole' => $user->role,
+                'status' => $status,
+                'data' => $data,
+                'statusCounts' => $statusCounts,
+                'code' => 200,
+                'message' => 'Success get by status'
+            ]);
+        } elseif ($user->role === 'admin') {
+            $data = ProkersModel::with(['leadership', 'users'])
+                ->where('status', $status)
+                ->get();
+
+            $statusCounts = [
+                'pending' => ProkersModel::where('status', 'pending')->count(),
+                'on_progress' => ProkersModel::where('status', 'on-progress')->count(),
+                'finish' => ProkersModel::where('status', 'finish')->count(),
+                'not_finish' => ProkersModel::where('status', 'not-finish')->count(),
+            ];
+
+            return response()->json([
+                'userRole' => $user->role,
+                'status' => $status,
+                'data' => $data,
+                'statusCounts' => $statusCounts,
+                'code' => 200,
+                'message' => 'Success get by status'
+            ]);
+        }
     }
+
+
+
 
     public function getDataByLeadership($id)
     {
-        $data = ProkersModel::where('id_leadership', $id)
-            ->with('leadership', 'users')
-            ->get();
+        $user = Auth::user();
+        if ($user->role == 'user') {
+            $data = ProkersModel::with('leadership', 'users')
+                ->where('id_leadership', $id)
+                ->where('id_user', $user->id)
+                ->get();
 
-        if ($data->isEmpty()) {
-            return response()->json([
-                'code' => 404,
-                'message' => 'Data not found'
-            ]);
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'Data not found ',
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'success get all data',
+                    'data' => $data
+                ]);
+            }
+        } elseif ($user->role == 'admin') {
+            $data = ProkersModel::with('leadership', 'users')->get();
+
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'Data not found ',
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'success get all data',
+                    'data' => $data
+                ]);
+            }
         }
-
-        return response()->json([
-            'code' => 200,
-            'message' => 'Successfully',
-            'data' => $data
-        ]);
     }
 }

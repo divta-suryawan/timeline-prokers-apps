@@ -18,7 +18,7 @@
                         <th>Finish</th>
                         <th>Status</th>
                         <th>Keterangan</th>
-                        <th>Users</th>
+                        <th>PJ</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -69,15 +69,6 @@
                                 <small id="id_leadership-error" class="text-danger"></small>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="id_user" class="form-label">Users</label>
-                                <select name="id_user" id="id_user" class="form-control">
-                                    <option value="">-- Pilih --</option>
-                                </select>
-                                <small id="id_users-error" class="text-danger"></small>
-                            </div>
-                        </div>
 
                     </form>
                 </div>
@@ -108,7 +99,7 @@
 
             function getDataProkers() {
                 $.ajax({
-                    url: `/api/v3/prokers`,
+                    url: `/v3/prokers`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -141,7 +132,7 @@
 
                             tableBody += "<td><span class='" + statusClass + "'>" + statusText + "</span></td>";
                             tableBody += "<td>" + keterangan + "</td>";
-                            tableBody += "<td>" + item.users.name + "</td>";
+                            tableBody += "<td>" + item.users.position + "</td>";
                             tableBody += "<td >" +
                                 "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
                                 "data-id='" + item.id + "'>" +
@@ -170,7 +161,7 @@
 
             function getleaderhipNew() {
                 $.ajax({
-                    url: '/api/v1/leadership',
+                    url: '/v1/leadership',
                     method: 'GET',
                     dataType: 'json',
                      success: function (response){
@@ -186,7 +177,7 @@
             // get user
             function getDataUser() {
                 $.ajax({
-                    url: '/api/v2/users',
+                    url: '/v2/users',
                     method: 'GET',
                     dataType: 'json',
                     success: function (response) {
@@ -214,13 +205,12 @@
                 $('#prokersModalLabel').text('Edit Data');
                 $.ajax({
                     type: 'GET',
-                    url: `/api/v3/prokers/get/${id}`,
+                    url: `/v3/prokers/get/${id}`,
                     success: function(response) {
                         $('#id').val(response.data.id);
                         $('#name').val(response.data.name);
                         $('#start').val(response.data.start);
                         $('#end').val(response.data.end);
-                        $('#id_user').val(response.data.id_user);
 
                         $('#prokersModal').modal('show');
                     },
@@ -257,14 +247,11 @@
                 let start= $('#start').val();
                 let end= $('#end').val();
                 let id_leadership= $('#id_leadership').val();
-                let id_user= $('#id_user').val();
-
                 let data = {
                     name  : name,
                     start : start,
                     end : end,
                     id_leadership : id_leadership,
-                    id_user : id_user,
                 };
                 $('#btnText').hide();
                 $('#btnSpinner').show();
@@ -272,7 +259,7 @@
                 if (id) {
                     $.ajax({
                         type: 'post',
-                        url: `/api/v3/prokers/update/${id}`,
+                        url: `/v3/prokers/update/${id}`,
                         data: data,
                         success: function(response) {
                             if (response.code === 422) {
@@ -304,9 +291,10 @@
                 } else {
                     $.ajax({
                         type: 'post',
-                        url: '/api/v3/prokers/create',
+                        url: '/v3/prokers/create',
                         data: data,
                         success: function(response) {
+                            console.log(response);
 
                             if (response.code === 422) {
                                 let errors = response.errors;
@@ -350,7 +338,7 @@
                     preConfirm: () => {
                         return $.ajax({
                             type: 'DELETE',
-                            url: `/api/v3/prokers/delete/${id}`,
+                            url: `/v3/prokers/delete/${id}`,
                         });
                     },
                 }).then((result) => {

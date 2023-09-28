@@ -40,7 +40,7 @@
             function getDataProkersPending() {
                 let status ='pending';
                 $.ajax({
-                    url: `/api/v3/prokers/detail/` + status,
+                    url: `/v3/prokers/detail/` + status,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -110,7 +110,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'post',
-                            url: `/api/v3/prokers/start/${id}`,
+                            url: `/v3/prokers/start/${id}`,
                             success: function(response) {
                                 Swal.fire('Sukses', 'Proker berhasil dijalankan', 'success');
                                 setTimeout(function() {
