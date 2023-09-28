@@ -70,7 +70,7 @@
 
         function getDataLeaderShip() {
             $.ajax({
-                url: `/api/v1/leadership`,
+                url: `/v1/leadership`,
                 method: "GET",
                 dataType: "json",
                 success: function (response) {
@@ -84,10 +84,10 @@
                             item.id + "' class='btn btn-outline-warning btn-sm btn-get-byleadership'>" +
                             "<i class='fa-regular fa-eye'></i></a>" +
                             "<button type='button' class='btn btn-outline-primary btn-sm edit-modal'" +
-                            "data-id='" + item.id + "'>" +
+                            "data-id='" + item.id + "' data-role='admin'>" +
                             "<i class='bx bx-edit-alt'></i></button>" +
                             "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
-                            item.id + "'><i class='bx bx-trash' ></i></button>" +
+                            item.id + "' data-role='admin'><i class='bx bx-trash' ></i></button>" +
                             "</td>";
                         tableBody += "</tr>";
                     });
@@ -114,7 +114,7 @@
             $('#leadershipModalLabel').text('Edit Data');
             $.ajax({
                 type: 'GET',
-                url: `/api/v1/leadership/get/${id}`,
+                url: `/v1/leadership/get/${id}`,
                 success: function(response) {
                     $('#id').val(response.data.id);
                     $('#periode').val(response.data.periode);
@@ -163,7 +163,7 @@
             if (id) {
                 $.ajax({
                     type: 'post',
-                    url: `/api/v1/leadership/update/${id}`,
+                    url: `/v1/leadership/update/${id}`,
                     data: data,
                     success: function(response) {
                         if (response.code === 422) {
@@ -197,7 +197,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: '/api/v1/leadership/create',
+                    url: '/v1/leadership/create',
                     data: data,
                     success: function(response) {
                         if (response.code === 422) {
@@ -244,7 +244,7 @@
                     preConfirm: () => {
                         return $.ajax({
                             type: 'DELETE',
-                            url: `/api/v1/leadership/delete/${id}`,
+                            url: `/v1/leadership/delete/${id}`,
                         });
                     },
                 }).then((result) => {

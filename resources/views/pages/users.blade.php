@@ -106,7 +106,7 @@
 
             function getDataUsers() {
                 $.ajax({
-                    url: `/api/v2/users`,
+                    url: `/v2/users`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -165,7 +165,7 @@
                 $('#passwordModalUsers').text('New Password');
                 $.ajax({
                     type: 'GET',
-                    url: `/api/v2/users/get/${id}`,
+                    url: `/v2/users/get/${id}`,
                     success: function(response) {
                         $('#id').val(response.data.id);
                         $('#name').val(response.data.name);
@@ -227,7 +227,7 @@
                 if (id) {
                     $.ajax({
                         type: 'post',
-                        url: `/api/v2/users/update/${id}`,
+                        url: `/v2/users/update/${id}`,
                         data: data,
                         success: function(response) {
                             if (response.code === 422) {
@@ -263,7 +263,7 @@
                 } else {
                     $.ajax({
                         type: 'POST',
-                        url: '/api/v2/users/create',
+                        url: '/v2/users/create',
                         data: data,
                         success: function(response) {
                             if (response.code === 422) {
@@ -312,7 +312,7 @@
                     preConfirm: () => {
                         return $.ajax({
                             type: 'DELETE',
-                            url: `/api/v2/users/delete/${id}`,
+                            url: `/v2/users/delete/${id}`,
                         });
                     },
                 }).then((result) => {

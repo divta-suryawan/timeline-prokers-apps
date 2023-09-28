@@ -74,12 +74,14 @@
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
+            @if (auth()->user()->role=='admin')
             <li class="menu-item" id="usersSidebar">
               <a href="/users" class="menu-link " >
                 <i class="menu-icon bx bxs-user"></i>
                 <div data-i18n="Account Settings">Users</div>
               </a>
             </li>
+            @endif
             <li class="menu-item" id="leadershipSidebar">
               <a href="/leadership" class="menu-link " >
                 <i class="menu-icon bx bxs-calendar"></i>

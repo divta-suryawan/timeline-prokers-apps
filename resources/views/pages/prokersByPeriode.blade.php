@@ -69,15 +69,6 @@
                                 <small id="id_leadership-error" class="text-danger"></small>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="id_user" class="form-label">Users</label>
-                                <select name="id_user" id="id_user" class="form-control">
-                                    <option value="">-- Pilih --</option>
-                                </select>
-                                <small id="id_users-error" class="text-danger"></small>
-                            </div>
-                        </div>
 
                     </form>
                 </div>
@@ -111,7 +102,7 @@
                 const urlParts = url.split('/');
                 const parameter = urlParts[urlParts.length - 1];
                 $.ajax({
-                    url: `/api/v3/prokers/byleadership/${parameter}`,
+                    url: `/v3/prokers/byleadership/${parameter}`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -178,7 +169,7 @@
 
             function getleaderhipNew() {
                 $.ajax({
-                    url: '/api/v1/leadership',
+                    url: '/v1/leadership',
                     method: 'GET',
                     dataType: 'json',
                      success: function (response){
@@ -194,7 +185,7 @@
             // get user
             function getDataUser() {
                 $.ajax({
-                    url: '/api/v2/users',
+                    url: '/v2/users',
                     method: 'GET',
                     dataType: 'json',
                     success: function (response) {
@@ -222,13 +213,12 @@
                 $('#prokersModalLabel').text('Edit Data');
                 $.ajax({
                     type: 'GET',
-                    url: `/api/v3/prokers/get/${id}`,
+                    url: `/v3/prokers/get/${id}`,
                     success: function(response) {
                         $('#id').val(response.data.id);
                         $('#name').val(response.data.name);
                         $('#start').val(response.data.start);
                         $('#end').val(response.data.end);
-                        $('#id_user').val(response.data.id_user);
 
                         $('#prokersModal').modal('show');
                     },
@@ -265,14 +255,11 @@
                 let start= $('#start').val();
                 let end= $('#end').val();
                 let id_leadership= $('#id_leadership').val();
-                let id_user= $('#id_user').val();
-
                 let data = {
                     name  : name,
                     start : start,
                     end : end,
                     id_leadership : id_leadership,
-                    id_user : id_user,
                 };
                 $('#btnText').hide();
                 $('#btnSpinner').show();
@@ -280,7 +267,7 @@
                 if (id) {
                     $.ajax({
                         type: 'post',
-                        url: `/api/v3/prokers/update/${id}`,
+                        url: `/v3/prokers/update/${id}`,
                         data: data,
                         success: function(response) {
                             if (response.code === 422) {
@@ -312,7 +299,7 @@
                 } else {
                     $.ajax({
                         type: 'post',
-                        url: '/api/v3/prokers/create',
+                        url: '/v3/prokers/create',
                         data: data,
                         success: function(response) {
 
@@ -358,7 +345,7 @@
                     preConfirm: () => {
                         return $.ajax({
                             type: 'DELETE',
-                            url: `/api/v3/prokers/delete/${id}`,
+                            url: `/v3/prokers/delete/${id}`,
                         });
                     },
                 }).then((result) => {

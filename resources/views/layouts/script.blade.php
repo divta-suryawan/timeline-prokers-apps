@@ -54,11 +54,11 @@
         });
     </script>
 
-    <script>
+        <script>
          $(document).ready(function () {
             function sidebarStatus() {
                 $.ajax({
-                    url: `/api/v3/prokers/detail/pending`,
+                    url: `/v3/prokers/detail/pending`,
                     method: 'GET',
                     dataType: 'json',
                     success: function (response) {
@@ -92,5 +92,39 @@
             sidebarStatus();
         });
         </script>
+        <script>
+        const urlLogout = 'logout'
+        $(document).ready(function() {
+            $('#btnLogout').click(function(e) {
+                Swal.fire({
+                    title: 'Yakin ingin Logout?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel',
+                    resolveButton: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: `{{ url('${urlLogout}') }}`,
+                            method: 'POST',
+                            dataType: 'json',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                localStorage.removeItem('access_token');
+                                window.location.href = '/login';
+                            },
+                            error: function(xhr, status, error) {
+                                alert('Error: Failed to logout. Please try again.');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
 

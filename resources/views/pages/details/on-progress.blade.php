@@ -73,7 +73,7 @@
             function getDataProkersOnProgress() {
                 let status ='on-progress';
                 $.ajax({
-                    url: `/api/v3/prokers/detail/` + status,
+                    url: `/v3/prokers/detail/` + status,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -140,7 +140,7 @@
                 $('#ket').val('');
                  $('#ket-error').text('');
                 $('#ketModal').modal('show');
-                rute = '/api/v3/prokers/finish/' + id;
+                rute = '/v3/prokers/finish/' + id;
             });
 
             $(document).on('click', '.btn-notfinish', function() {
@@ -151,7 +151,7 @@
                  $('#ket-error').text('');
                 $('#ketModal').modal('show');
 
-                rute = '/api/v3/prokers/notfinish/' + id;
+                rute = '/v3/prokers/notfinish/' + id;
             });
 
             function showSweetAlert(icon, title, message) {

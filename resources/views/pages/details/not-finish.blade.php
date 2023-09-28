@@ -38,7 +38,7 @@
             function getDataProkersNotFinish() {
                 let status ='not-finish';
                 $.ajax({
-                    url: `/api/v3/prokers/detail/` + status,
+                    url: `/v3/prokers/detail/` + status,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
