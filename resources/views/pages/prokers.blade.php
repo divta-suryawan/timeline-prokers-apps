@@ -18,7 +18,9 @@
                         <th>Finish</th>
                         <th>Status</th>
                         <th>Keterangan</th>
+                        @if (auth()->user()->role=='admin')
                         <th>PJ</th>
+                        @endif
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -63,13 +65,9 @@
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="id_leadership" class="form-label">Periode</label>
-                                 <select name="id_leadership" id="id_leadership" class="form-control">
-                                    <option value="">-- Pilih --</option>
-                                </select>
-                                <small id="id_leadership-error" class="text-danger"></small>
+                                <input type="text" id="id_leadership" name="id_leadership" class="form-control" readonly>
                             </div>
                         </div>
-
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -104,6 +102,7 @@
                     dataType: "json",
                     success: function (response) {
                         let tableBody = "";
+                        let userRole = response.userRole;
                         $.each(response.data, function (index, item) {
                             tableBody += "<tr>";
                             tableBody += "<td>" + (index + 1) + "</td>";
@@ -132,14 +131,27 @@
 
                             tableBody += "<td><span class='" + statusClass + "'>" + statusText + "</span></td>";
                             tableBody += "<td>" + keterangan + "</td>";
-                            tableBody += "<td>" + item.users.position + "</td>";
-                            tableBody += "<td >" +
-                                "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
-                                "data-id='" + item.id + "'>" +
-                                "<i class='bx bx-edit-alt'></i></button>" +
-                                "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
-                                item.id + "'><i class='bx bx-trash' ></i></button>" +
-                                "</td>";
+                            if (userRole === "admin") {
+                                tableBody += "<td>" + item.users.position + "</td>";
+                            }
+                            tableBody += "<td >";
+                            switch (item.status) {
+                                case "finish":
+                                case "not-finish":
+                                    tableBody += "<button type='button' class='btn btn-outline-primary btn-sm' disabled>" +
+                                        "<i class='bx bx-edit-alt'></i></button>";
+                                    tableBody += "<button type='button' class='btn btn-outline-danger btn-sm' disabled>" +
+                                        "<i class='bx bx-trash'></i></button>";
+                                    break;
+                                default:
+                                    tableBody += "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
+                                        "data-id='" + item.id + "'>" +
+                                        "<i class='bx bx-edit-alt'></i></button>";
+                                    tableBody += "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
+                                        item.id + "'><i class='bx bx-trash' ></i></button>";
+                                    break;
+                            }
+                            tableBody += "</td>";
                             tableBody += "</tr>";
                         });
                         let table = $("#dataTableProkers").DataTable();
@@ -161,16 +173,14 @@
 
             function getleaderhipNew() {
                 $.ajax({
-                    url: '/v1/leadership',
+                    url: '/v3/prokers/leadership-new',
                     method: 'GET',
                     dataType: 'json',
-                     success: function (response){
-                        $.each(response.data, function (index, item) {
-                            $('#id_leadership').append('<option value="' + item.id + '">' + item.periode + '</option>');
-                        });
+                    success: function (response) {
+                        $('#id_leadership').val(response.data.periode);
                     },
                     error: function () {
-                        console.log('Failed to get user data from server');
+                        console.log('Failed to get leadership data from server');
                     }
                 });
             }

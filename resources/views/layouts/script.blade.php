@@ -53,45 +53,6 @@
             }, 300);
         });
     </script>
-
-        <script>
-         $(document).ready(function () {
-            function sidebarStatus() {
-                $.ajax({
-                    url: `/v3/prokers/detail/pending`,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        var statusCounts = response.statusCounts;
-                        if (statusCounts.pending > 0) {
-                            $("#pendingStatus").show();
-                        } else {
-                            $("#pendingStatus").hide();
-                        }
-                        if (statusCounts.on_progress > 0) {
-                            $("#onProgressStatus").show();
-                        } else {
-                            $("#onProgressStatus").hide();
-                        }
-                        if (statusCounts.finish > 0) {
-                            $("#finishStatus").show();
-                        } else {
-                            $("#finishStatus").hide();
-                        }
-                        if (statusCounts.not_finish > 0) {
-                            $("#notFinishStatus").show();
-                        } else {
-                            $("#notFinishStatus").hide();
-                        }
-                    },
-                    error: function (error) {
-                        console.error('Gagal mendapatkan data statusCounts', error);
-                    }
-                });
-            }
-            sidebarStatus();
-        });
-        </script>
         <script>
         const urlLogout = 'logout'
         $(document).ready(function() {

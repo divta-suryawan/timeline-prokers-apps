@@ -15,7 +15,9 @@
                         <th>Finish</th>
                         <th>Status</th>
                         <th>Keterangan</th>
-                        <th>Users</th>
+                        @if (auth()->user()->role=='admin')
+                        <th>PJ</th>
+                        @endif
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -77,6 +79,7 @@
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
+                        let userRole = response.userRole;
                         let tableBody = "";
                         $.each(response.data, function (index, item) {
                             tableBody += "<tr>";
@@ -106,7 +109,9 @@
 
                             tableBody += "<td><span class='" + statusClass + "'>" + statusText + "</span></td>";
                             tableBody += "<td>" + keterangan + "</td>";
-                            tableBody += "<td>" + item.users.name + "</td>";
+                            if (userRole === 'admin') {
+                                tableBody += "<td>" + item.users.position + "</td>";
+                            }
                             tableBody += "<td >" +
                                         "<button type='button' class='btn btn-outline-success btn-sm btn-end'" +
                                         "data-id='" + item.id + "'><i class='fa-solid fa-thumbs-up'></i></button>" +

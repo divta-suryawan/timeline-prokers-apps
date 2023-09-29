@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class ProkersController extends Controller
 {
+
     public function getAllData()
     {
         $user = Auth::user();
+        $latestLeadership = LeadershipModel::latest()->first();
+        $userRole = $user->role;
         if ($user->role == 'user') {
             $data = ProkersModel::with('leadership', 'users')
                 ->where('id_user', $user->id)
+                ->where('id_leadership', $latestLeadership->id)
                 ->get();
 
             if ($data->isEmpty()) {
@@ -29,11 +33,15 @@ class ProkersController extends Controller
                 return response()->json([
                     'code' => 200,
                     'message' => 'success get all data',
-                    'data' => $data
+                    'data' => $data,
+                    'userRole' => $userRole
+
                 ]);
             }
         } elseif ($user->role == 'admin') {
-            $data = ProkersModel::with('leadership', 'users')->get();
+            $data = ProkersModel::with('leadership', 'users')
+                ->where('id_leadership', $latestLeadership->id)
+                ->get();
 
             if ($data->isEmpty()) {
                 return response()->json([
@@ -44,11 +52,15 @@ class ProkersController extends Controller
                 return response()->json([
                     'code' => 200,
                     'message' => 'success get all data',
-                    'data' => $data
+                    'data' => $data,
+                    'userRole' => $userRole
+
                 ]);
             }
         }
     }
+
+
 
     public function createData(Request $request)
     {
@@ -58,7 +70,6 @@ class ProkersController extends Controller
                 'name' => 'required',
                 'start' => 'required|date',
                 'end' => 'required|date',
-                'id_leadership' => 'required',
             ],
             [
                 'name' => 'Form name tidak boleh kosong',
@@ -66,7 +77,6 @@ class ProkersController extends Controller
                 'end.required' => 'From end tidak boleh kosong',
                 'start.date' => 'Harus menggunakan format tanggal yang benar',
                 'end.date' => 'Harus menggunakan format tanggal yang benar',
-                'id_leadership.required' => ' form periode tidak boleh kosong',
             ]
         );
 
@@ -85,7 +95,9 @@ class ProkersController extends Controller
             $data->name = $request->input('name');
             $data->start = $request->input('start');
             $data->end = $request->input('end');
-            $data->id_leadership = $request->input('id_leadership');
+            $latestLeadership = LeadershipModel::latest()->first();
+            $idLeadership = $latestLeadership->id;
+            $data->id_leadership = $idLeadership;
             $data->save();
         } catch (\Throwable $th) {
             return response()->json([
@@ -127,7 +139,6 @@ class ProkersController extends Controller
                 'name' => 'required',
                 'start' => 'required|date',
                 'end' => 'required|date',
-                'id_leadership' => 'required',
             ],
             [
                 'name' => 'Form name tidak boleh kosong',
@@ -135,7 +146,6 @@ class ProkersController extends Controller
                 'end.required' => 'From end tidak boleh kosong',
                 'start.date' => 'Harus menggunakan format tanggal yang benar',
                 'end.date' => 'Harus menggunakan format tanggal yang benar',
-                'id_leadership.required' => ' form periode tidak boleh kosong',
             ]
         );
 
@@ -151,7 +161,9 @@ class ProkersController extends Controller
             $data->name = $request->input('name');
             $data->start = $request->input('start');
             $data->end = $request->input('end');
-            $data->id_leadership = $request->input('id_leadership');
+            $latestLeadership = LeadershipModel::latest()->first();
+            $idLeadership = $latestLeadership->id;
+            $data->id_leadership = $idLeadership;
             $data->update();
         } catch (\Throwable $th) {
             return response()->json([
@@ -267,10 +279,12 @@ class ProkersController extends Controller
 
     public function detail($status)
     {
+        $latestLeadership = LeadershipModel::latest()->first();
         $user = Auth::user();
         if ($user->role === 'user') {
             $data = ProkersModel::with('leadership', 'users')
                 ->where('id_user', $user->id)
+                ->where('id_leadership', $latestLeadership->id)
                 ->where('status', $status)
                 ->get();
 
@@ -301,6 +315,7 @@ class ProkersController extends Controller
             ]);
         } elseif ($user->role === 'admin') {
             $data = ProkersModel::with(['leadership', 'users'])
+                ->where('id_leadership', $latestLeadership->id)
                 ->where('status', $status)
                 ->get();
 
@@ -321,9 +336,6 @@ class ProkersController extends Controller
             ]);
         }
     }
-
-
-
 
     public function getDataByLeadership($id)
     {
@@ -347,7 +359,9 @@ class ProkersController extends Controller
                 ]);
             }
         } elseif ($user->role == 'admin') {
-            $data = ProkersModel::with('leadership', 'users')->get();
+            $data = ProkersModel::with('leadership', 'users')
+                ->where('id_leadership', $id)
+                ->get();
 
             if ($data->isEmpty()) {
                 return response()->json([
