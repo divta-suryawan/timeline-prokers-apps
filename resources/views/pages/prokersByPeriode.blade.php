@@ -18,7 +18,7 @@
                         <th>Finish</th>
                         <th>Status</th>
                         <th>Keterangan</th>
-                        <th>Users</th>
+                        <th>PJ</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -135,7 +135,7 @@
 
                             tableBody += "<td><span class='" + statusClass + "'>" + statusText + "</span></td>";
                             tableBody += "<td>" + keterangan + "</td>";
-                            tableBody += "<td>" + item.users.name + "</td>";
+                            tableBody += "<td>" + item.users.position + "</td>";
                             tableBody += "<td >" +
                                 "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-toggle='modal' " +
                                 "data-id='" + item.id + "'>" +

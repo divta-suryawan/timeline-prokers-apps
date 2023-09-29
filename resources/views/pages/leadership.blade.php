@@ -3,9 +3,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h5>DATA PERIODE KEPENGURUSAN</h5>
+            @if (auth()->user()->role=='admin')
             <button type="button" class="btn btn-outline-primary" id="add-leadership" data-bs-toggle="modal" data-bs-target="#leadershipModal">
                 <i class='bx bxs-plus-circle'></i>
             </button>
+            @endif
         </div>
             <div class="table-responsive text-nowrap px-4 py-1">
                 <table class="table" id="dataTableLeadership">
@@ -68,27 +70,28 @@
             "autoWidth": false,
         });
 
-        function getDataLeaderShip() {
+       function getDataLeaderShip() {
             $.ajax({
                 url: `/v1/leadership`,
                 method: "GET",
                 dataType: "json",
                 success: function (response) {
                     let tableBody = "";
+                    let userRole = response.userRole;
                     $.each(response.data, function (index, item) {
                         tableBody += "<tr>";
                         tableBody += "<td>" + (index + 1) + "</td>";
                         tableBody += "<td>" + item.periode + "</td>";
-                        tableBody += "<td >" +
-                           "<a href='/prokers/byleadership/" + item.id + "' data-id='" +
-                            item.id + "' class='btn btn-outline-warning btn-sm btn-get-byleadership'>" +
-                            "<i class='fa-regular fa-eye'></i></a>" +
-                            "<button type='button' class='btn btn-outline-primary btn-sm edit-modal'" +
-                            "data-id='" + item.id + "' data-role='admin'>" +
-                            "<i class='bx bx-edit-alt'></i></button>" +
-                            "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" +
-                            item.id + "' data-role='admin'><i class='bx bx-trash' ></i></button>" +
-                            "</td>";
+                        tableBody += "<td>";
+
+                        tableBody += "<a href='/prokers/byleadership/" + item.id + "' data-id='" + item.id + "' class='btn btn-outline-warning btn-sm btn-get-byleadership'><i class='fa-regular fa-eye'></i></a>";
+
+                        if (userRole === "admin") {
+                            tableBody += "<button type='button' class='btn btn-outline-primary btn-sm edit-modal' data-id='" + item.id + "' data-role='admin'><i class='bx bx-edit-alt'></i></button>";
+                            tableBody += "<button type='button' class='btn btn-outline-danger btn-sm delete-confirm' data-id='" + item.id + "' data-role='admin'><i class='bx bx-trash'></i></button>";
+                        }
+
+                        tableBody += "</td>";
                         tableBody += "</tr>";
                     });
                     let table = $("#dataTableLeadership").DataTable();
@@ -100,7 +103,9 @@
                 }
             });
         }
+
         getDataLeaderShip();
+
 
 
         $.ajaxSetup({

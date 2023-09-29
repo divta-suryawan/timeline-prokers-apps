@@ -98,6 +98,7 @@
               <span class="menu-header-text">Detail Program Kerja</span>
             </li>
             <li class="menu-item">
+
             <li class="menu-item" id="pendingStatus" class="pendingStatus">
               <a href="/prokers/pending" class="menu-link " >
                 <i class="menu-icon tf-icons bx bx-play"></i>
@@ -122,6 +123,7 @@
                 <div data-i18n="Account Settings">Tidak terlaksana</div>
               </a>
             </li>
+
 
             </li>
           </ul>

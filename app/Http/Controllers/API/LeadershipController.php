@@ -11,6 +11,8 @@ class LeadershipController extends Controller
 {
     public function getAllData()
     {
+        $user = auth()->user();
+        $userRole = $user->role;
         $data = LeadershipModel::all();
         if ($data->isEmpty()) {
             return response()->json([
@@ -21,7 +23,8 @@ class LeadershipController extends Controller
             return response()->json([
                 'code' => 200,
                 'message' => 'Get all data successfully',
-                'data' => $data
+                'data' => $data,
+                'userRole' => $userRole
             ]);
         }
     }

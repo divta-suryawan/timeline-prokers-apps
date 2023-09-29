@@ -83,6 +83,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('/prokers/notfinish/{id}', 'markProkerNotFinished');
         Route::get('/prokers/detail/{status}', 'detail');
         Route::get('/prokers/byleadership/{id}', 'getDataByLeadership');
+        Route::get('/prokers/leadership-new', 'getLatestLeadership');
     });
 
 
